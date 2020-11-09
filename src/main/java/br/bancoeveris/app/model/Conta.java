@@ -3,30 +3,24 @@ package br.bancoeveris.app.model;
 import javax.persistence.*;
 
 @Entity
-public class Conta {
+public class Conta extends BaseResponse {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
-	private String hash;
+	private Long id;
 	private String nome;
+	@Column(unique = true)
 	private String cpf;
+	@Column(unique = true)
+	private String hash;
 	private double saldo;
 
 	public Long getId() {
-		return Id;
+		return id;
 	}
 
 	public void setId(Long id) {
-		this.Id = id;
-	}
-
-	public String getHash() {
-		return hash;
-	}
-
-	public void setHash(String hash) {
-		this.hash = hash;
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -45,6 +39,14 @@ public class Conta {
 		this.cpf = cpf;
 	}
 
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
 	public double getSaldo() {
 		return saldo;
 	}
@@ -52,5 +54,4 @@ public class Conta {
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
-
 }
