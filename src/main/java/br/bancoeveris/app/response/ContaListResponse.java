@@ -1,11 +1,10 @@
-package br.bancoeveris.app.spec;
+package br.bancoeveris.app.response;
 
 import java.util.List;
 
-import br.bancoeveris.app.model.BaseResponse;
 import br.bancoeveris.app.model.Conta;
 
-public class ContaList extends BaseResponse {
+public class ContaListResponse extends BaseResponse {
 
 	private List<Conta> Contas;
 

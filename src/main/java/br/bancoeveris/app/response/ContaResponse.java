@@ -1,19 +1,10 @@
-package br.bancoeveris.app.model;
+package br.bancoeveris.app.response;
 
-import javax.persistence.*;
+public class ContaResponse extends BaseResponse {
 
-import br.bancoeveris.app.response.BaseResponse;
-
-@Entity
-public class Conta {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	@Column(unique = true)
 	private String cpf;
-	@Column(unique = true)
 	private String hash;
 	private double saldo;
 

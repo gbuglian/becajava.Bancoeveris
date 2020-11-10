@@ -13,11 +13,11 @@ public class Operacao {
 
 	@ManyToOne
 	@JoinColumn(name = "Conta_Origem")
-	private Conta conta_origem;
+	private Conta contaOrigem;
 
 	@ManyToOne
 	@JoinColumn(name = "Conta_Destino")
-	private Conta conta_destino;
+	private Conta contaDestino;
 
 	public Long getId() {
 		return id;
@@ -44,18 +44,18 @@ public class Operacao {
 	}
 
 	public Conta getConta_origem() {
-		return conta_origem;
+		return contaOrigem;
 	}
 
-	public void setConta_origem(Conta conta_origem) {
-		this.conta_origem = conta_origem;
+	public void setConta_origem(Conta contaOrigem) {
+		this.contaOrigem = contaOrigem;
 	}
 
 	public Conta getConta_destino() {
-		return conta_destino;
+		return contaDestino;
 	}
 
-	public void setConta_destino(Conta conta_destino) {
-		this.conta_destino = conta_destino;
+	public void setConta_destino(Conta contaDestino) {
+		this.contaDestino = contaDestino;
 	}
 }

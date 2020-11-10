@@ -1,4 +1,4 @@
-package br.bancoeveris.app.model;
+package br.bancoeveris.app.response;
 
 import javax.persistence.Transient;
 

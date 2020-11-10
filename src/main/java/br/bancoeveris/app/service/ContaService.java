@@ -2,14 +2,17 @@ package br.bancoeveris.app.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
-import br.bancoeveris.app.model.BaseResponse;
 import br.bancoeveris.app.model.Conta;
+import br.bancoeveris.app.model.Operacao;
 import br.bancoeveris.app.repository.ContaRepository;
-import br.bancoeveris.app.spec.ContaList;
-import br.bancoeveris.app.spec.ContaSpec;
+import br.bancoeveris.app.request.ContaRequest;
+import br.bancoeveris.app.response.BaseResponse;
+import br.bancoeveris.app.response.ContaListResponse;
+import br.bancoeveris.app.response.ContaResponse;
 
 @Service
 public class ContaService {
@@ -22,46 +25,55 @@ public class ContaService {
 		operacaoService = _operacaoService;
 	}
 
-	public BaseResponse inserir(ContaSpec contaspec) {
+	public BaseResponse inserir(ContaRequest contaRequest) {
 		Conta conta = new Conta();
-		BaseResponse response = new BaseResponse();
+		ContaResponse response = new ContaResponse();
 		response.StatusCode = 400;
 
-		if (contaspec.getHash() == conta.getHash()) {
+		if (contaRequest.getHash() == conta.getHash()) {
 			response.Message = "Hash já em uso";
 			return response;
 		}
 
-		if (contaspec.getHash() == "") {
+		if (contaRequest.getHash() == "") {
 			response.Message = "Hash não preenchido";
 			return response;
 		}
 
-		if (contaspec.getNome() == "") {
+		if (contaRequest.getNome() == "") {
 			response.Message = "Nome não preenchido";
 			return response;
 		}
 
-		if (contaspec.getCpf() == "") {
+		if (contaRequest.getCpf() == "") {
 			response.Message = "CPF não preenchido";
 			return response;
 		}
 
-		conta.setHash(contaspec.getHash());
-		conta.setCpf(contaspec.getCpf());
-		conta.setNome(contaspec.getNome());
+		UUID uuid = UUID.randomUUID();
+		conta.setHash(uuid.toString());
+
+		response.Message = "Hash gerado";
+
+		conta.setCpf(contaRequest.getCpf());
+		conta.setNome(contaRequest.getNome());
 
 		contaRepository.save(conta);
 
+		response.setHash(conta.getHash());
+		response.setNome(conta.getNome());
+		response.setId(conta.getId());
+
 		response.StatusCode = 201;
 		response.Message = "Conta inserida com sucesso.";
+
 		return response;
 	}
 
-	public Conta obter(Long id) {
+	public ContaResponse obter(Long id) {
 		Optional<Conta> cliente = contaRepository.findById(id);
 
-		Conta response = new Conta();
+		ContaResponse response = new ContaResponse();
 
 		if (cliente.isEmpty()) {
 			response.Message = "Cliente não encontrado";
@@ -78,10 +90,10 @@ public class ContaService {
 		return response;
 	}
 
-	public ContaList listar() {
+	public ContaListResponse listar() {
 		List<Conta> lista = contaRepository.findAll();
 
-		ContaList response = new ContaList();
+		ContaListResponse response = new ContaListResponse();
 		response.setContas(lista);
 		response.StatusCode = 200;
 		response.Message = "Contas Obtidas com sucesso";
@@ -89,30 +101,30 @@ public class ContaService {
 		return response;
 	}
 
-	public BaseResponse atualizar(Long id, ContaSpec contaSpec) {
+	public BaseResponse atualizar(Long id, ContaRequest contaRequest) {
 		Conta conta = new Conta();
 		BaseResponse response = new BaseResponse();
 		response.StatusCode = 400;
 
-		if (contaSpec.getHash() == "") {
+		if (contaRequest.getHash() == "") {
 			response.Message = "Hash não informado";
 			return response;
 		}
 
-		if (contaSpec.getNome() == "") {
+		if (contaRequest.getNome() == "") {
 			response.Message = "Nome não informado";
 			return response;
 		}
 
-		if (contaSpec.getCpf() == "") {
+		if (contaRequest.getCpf() == "") {
 			response.Message = "CPF não informado";
 			return response;
 		}
 
 		conta.setId(id);
-		conta.setHash(contaSpec.getHash());
-		conta.setNome(contaSpec.getNome());
-		conta.setCpf(contaSpec.getCpf());
+		conta.setHash(contaRequest.getHash());
+		conta.setNome(contaRequest.getNome());
+		conta.setCpf(contaRequest.getCpf());
 
 		contaRepository.save(conta);
 		response.StatusCode = 200;
@@ -129,6 +141,28 @@ public class ContaService {
 		}
 
 		contaRepository.deleteById(id);
+		response.StatusCode = 200;
+		return response;
+	}
+
+	public ContaResponse Saldo(String hash) {
+
+		ContaResponse response = new ContaResponse();
+		response.StatusCode = 400;
+
+		Conta conta = contaRepository.findByHash(hash);
+
+		if (conta == null) {
+			response.Message = "Conta não encontrada!!";
+			return response;
+		}
+
+		double saldo = operacaoService.Saldo(conta.getId());
+
+		response.setSaldo(saldo);
+		response.setNome(conta.getNome());
+		response.setHash(conta.getHash());
+		response.Message = "Saldo obtido com sucesso";
 		response.StatusCode = 200;
 		return response;
 	}

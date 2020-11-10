@@ -1,6 +1,6 @@
 package br.bancoeveris.app.controller;
 
-import br.bancoeveris.app.model.BaseResponse;
+import br.bancoeveris.app.response.BaseResponse;
 
 public class BaseController {
 

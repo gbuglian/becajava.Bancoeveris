@@ -1,8 +1,6 @@
-package br.bancoeveris.app.spec;
+package br.bancoeveris.app.request;
 
-import br.bancoeveris.app.model.BaseResponse;
-
-public class ContaSpec extends BaseResponse {
+public class ContaRequest{
 
 	private String nome;
 	private String cpf;
